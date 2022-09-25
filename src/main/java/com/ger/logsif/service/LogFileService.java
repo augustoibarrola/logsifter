@@ -118,25 +118,30 @@ public class LogFileService {
 //			Create a Instant class instance to count the number
 //			of lines that are traversed. 
 			Instant lineCountStart = Instant.now();
-			int lines = 0;
+			int lines = 1;
 			int foundOnLine = 0;
 			System.out.println("\nReading from file located at " + f + "...\n");
-			System.out.println("Searching for '" + key + "' keyword at " + f + "... \n" + f);
+			System.out.println("Searching for '" + key + "' keyword at " + f + "...\n");
 			
 			while(logfileScanner.hasNextLine()) {
 				
 				String line = logfileScanner.nextLine();
-				lines++;
 				
-				String foundKey = logfileScanner.findInLine(key);
+//				String foundKey = logfileScanner.findInLine(key);
 				
-				if (foundKey != null) {
-//					System.out.println("lineCountStart " + lineCountStart);
+				//If the keyword is found in the line, then the line should be 
+				//printed
+//				if (foundKey != null) {
+				if(line.contains(key)) {
+
 					
-					// while there are still lines in left in the inputStream, 
-					// print out the contents. 
-					System.out.print("foundKey " + foundKey + "\n");
+					System.out.print(lines +  " | " + line + "\n");
+					
+					// when the keyword is found, we need to be print
+					// the whole line, nut just from where the scanner found the object. 
+
 					foundOnLine++;
+					lines++;
 				}
 				
 				
