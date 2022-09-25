@@ -1,10 +1,12 @@
 package com.ger.logsif.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -55,11 +57,12 @@ public class LogFileService {
         }
     }
     
-    public String storeLogFile(MultipartFile file, String Key) {
+    public String storeLogFile(MultipartFile file, String key) {
         
+    	HashMap<Integer, String> foundKeys = findKeyInFile(file, key);
+    	
     	// Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        System.out.println("StringUtils.cleanPath(file) " +  StringUtils.cleanPath(file.getOriginalFilename()))  ;      
         try {
             // Check if the file's name contains invalid characters
             if(fileName.contains("..")) {
@@ -93,6 +96,19 @@ public class LogFileService {
 //            throw new MyFileNotFoundException("File not found " + fileName, ex);
         	return null;
         }
+    }
+    
+    private HashMap<Integer, String> findKeyInFile(MultipartFile file, String key) {
+    	
+    	HashMap<Integer, String> foundKeys = new HashMap<Integer, String>();
+    	
+    	
+//    	Grab the file from its location
+    	Path f = this.fileStorageLocation.resolve(StringUtils.cleanPath(file.getOriginalFilename()));
+    	System.out.println("f as such");    	
+    	System.out.print(f);
+    	
+    	return foundKeys;
     }
     	
 
