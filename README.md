@@ -14,3 +14,4 @@ The input of the ja:va file may be large, so we have to accomadate for this. The
 provided by the File class are not suffecient in cases where large log files need to be
 sifted through.
 
+- Am using [mingrammer/flog](https://github.com/mingrammer/flog) to make fake log outputs for example parses. 

@@ -25,7 +25,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class LogFileService {
 
+	@Autowired
+	SifterService sifterService;
 	private final Path fileStorageLocation;
+	
 
 	@Autowired
 	public LogFileService(LogFileProperties logfileProperties) {
@@ -102,56 +105,35 @@ public class LogFileService {
 
 	private HashMap<Integer, String> findKeyInFile(MultipartFile file, String key) throws FileNotFoundException {
 		HashMap<Integer, String> foundKeys = new HashMap<Integer, String>();
-		
+
 		try {
-
-
-//    	Grab the file from its location
 			Path f = this.fileStorageLocation.resolve(StringUtils.cleanPath(file.getOriginalFilename()));
-//    	Create the file to parse through
 			File logfile = new File(f.toString());
-
-//    	Create a FileInPutStream Object and a Scanner.
+			
 			FileInputStream inputStream = new FileInputStream(logfile);
 			Scanner logfileScanner = new Scanner(inputStream, "UTF-8");
-			
-//			Create a Instant class instance to count the number
-//			of lines that are traversed. 
-			Instant lineCountStart = Instant.now();
+
 			int lines = 1;
 			int foundOnLine = 0;
+			
 			System.out.println("\nReading from file located at " + f + "...\n");
 			System.out.println("Searching for '" + key + "' keyword at " + f + "...\n");
-			
-			while(logfileScanner.hasNextLine()) {
-				
+
+			while (logfileScanner.hasNextLine()) {
+
 				String line = logfileScanner.nextLine();
-				
-//				String foundKey = logfileScanner.findInLine(key);
-				
-				//If the keyword is found in the line, then the line should be 
-				//printed
-//				if (foundKey != null) {
-				if(line.contains(key)) {
 
-					
-					System.out.print(lines +  " | " + line + "\n");
-					
-					// when the keyword is found, we need to be print
-					// the whole line, nut just from where the scanner found the object. 
+				String readableLine = new String(line);
 
-					foundOnLine++;
-					lines++;
-				}
-				
-				
-				
+				sifterService.useContainsMethod(readableLine, key, lines);
+
+				lines++;
+
 			}
-			
+
 			System.out.println("Total lines: " + lines + "\n");
-			System.out.println("Keyword found on a total of " + foundOnLine+ " lines\n");
-			
-			
+			System.out.println("Keyword found on a total of " + foundOnLine + " lines\n");
+
 			return foundKeys;
 
 		} catch (FileNotFoundException exception) {
