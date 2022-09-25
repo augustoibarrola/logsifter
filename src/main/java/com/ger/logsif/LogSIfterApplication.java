@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-import com.ger.logsif.logfileprops.LogFileProperties;
+import com.ger.logsif.props.LogFileProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties({LogFileProperties.class})

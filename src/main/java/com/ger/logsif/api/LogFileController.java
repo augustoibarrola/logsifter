@@ -31,7 +31,20 @@ public class LogFileController {
         return new UploadFileResponse(fileName, fileDownloadUri,
         		logfile.getContentType(), logfile.getSize());
     }
+	
+//	Compile-time Polymorphism
+	@PostMapping("/uploadFile")
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile logfile, String key) {
+        String fileName = storageService.storeLogFile(logfile, key);
 
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(fileName)
+                .toUriString();
+
+        return new UploadFileResponse(fileName, fileDownloadUri,
+        		logfile.getContentType(), logfile.getSize());
+    }
 
 }
 

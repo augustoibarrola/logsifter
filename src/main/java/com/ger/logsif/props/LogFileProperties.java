@@ -1,4 +1,4 @@
-package com.ger.logsif.logfileprops;
+package com.ger.logsif.props;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
