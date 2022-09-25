@@ -2,7 +2,11 @@ package com.ger.logsif.api;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.FileNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,8 +37,8 @@ public class LogFileController {
 //    }
 //	
 //	Compile-time Polymorphism
-	@PostMapping("/uploadFile")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile logfile, String key) {
+	@PostMapping(value = "/uploadFile/{searchKey}")
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile logfile, @PathVariable("searchKey")String key) throws FileNotFoundException {
         String fileName = storageService.storeLogFile(logfile, key);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
