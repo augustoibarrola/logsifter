@@ -104,41 +104,29 @@ public class LogFileService {
 		HashMap<Integer, String> foundKeys = new HashMap<Integer, String>();
 		
 		try {
-
-
-//    	Grab the file from its location
 			Path f = this.fileStorageLocation.resolve(StringUtils.cleanPath(file.getOriginalFilename()));
-//    	Create the file to parse through
 			File logfile = new File(f.toString());
 
-//    	Create a FileInPutStream Object and a Scanner.
+
 			FileInputStream inputStream = new FileInputStream(logfile);
 			Scanner logfileScanner = new Scanner(inputStream, "UTF-8");
 			
-//			Create a Instant class instance to count the number
-//			of lines that are traversed. 
+
 			Instant lineCountStart = Instant.now();
 			int lines = 1;
 			int foundOnLine = 0;
+			
 			System.out.println("\nReading from file located at " + f + "...\n");
 			System.out.println("Searching for '" + key + "' keyword at " + f + "...\n");
 			
 			while(logfileScanner.hasNextLine()) {
 				
 				String line = logfileScanner.nextLine();
-				
-//				String foundKey = logfileScanner.findInLine(key);
-				
-				//If the keyword is found in the line, then the line should be 
-				//printed
-//				if (foundKey != null) {
+
 				if(line.contains(key)) {
 
 					
 					System.out.print(lines +  " | " + line + "\n");
-					
-					// when the keyword is found, we need to be print
-					// the whole line, nut just from where the scanner found the object. 
 
 					foundOnLine++;
 					lines++;
