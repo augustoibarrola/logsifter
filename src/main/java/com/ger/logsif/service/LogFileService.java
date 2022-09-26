@@ -26,21 +26,13 @@ import org.springframework.stereotype.Service;
 public class LogFileService {
 
 	private final SifterService sifterService;
-	
+
 //	private final Path fileStorageLocation;
-	
 
 	public LogFileService(LogFileProperties logfileProperties) {
-		
+
 		this.sifterService = new SifterService(logfileProperties);
-		
-//		this.fileStorageLocation = Paths.get(logfileProperties.getUploadRepo()).toAbsolutePath().normalize();
-//
-//		try {
-//			Files.createDirectories(this.fileStorageLocation);
-//		} catch (Exception ex) {
-////            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
-//		}
+
 	}
 
 	public String storeLogFile(MultipartFile file) {
@@ -108,37 +100,8 @@ public class LogFileService {
 	private HashMap<Integer, String> findKeyInFile(MultipartFile file, String key) throws FileNotFoundException {
 		HashMap<Integer, String> foundKeys = new HashMap<Integer, String>();
 
-		
 		try {
-			
-//			Path f = this.fileStorageLocation.resolve(StringUtils.cleanPath(file.getOriginalFilename()));
-//			File logfile = new File(f.toString());
-//			
-//			FileInputStream inputStream = new FileInputStream(logfile);
-//			Scanner logfileScanner = new Scanner(inputStream, "UTF-8");
-//
-//			int lines = 1;
-//			int foundOnLine = 0;
-//			
-//			System.out.println("\nReading from file located at " + f + "...\n");
-//			System.out.println("Searching for '" + key + "' keyword at " + f + "...\n");
-//
-//			while (logfileScanner.hasNextLine()) {
-//
-//				String line = logfileScanner.nextLine();
-//
-//				String readableLine = new String(line);
-//
-////				sifterService.useContainsMethod(readableLine, key, lines);\
-				sifterService.useContainsMethod(file, key);
-
-//				lines++;
-
-//			}
-
-//			System.out.println("Total lines: " + lines + "\n");
-//			System.out.println("Keyword found on a total of " + foundOnLine + " lines\n");
-
+			sifterService.useContainsMethod(file, key);
 			return foundKeys;
 
 		} catch (FileNotFoundException exception) {
