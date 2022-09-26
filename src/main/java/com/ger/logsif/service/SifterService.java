@@ -44,7 +44,7 @@ public class SifterService {
 
 		try {
 			this.useContainsMethodWithString(file, key);
-			this.testReader(file);
+			this.siftLog(file, key);
 			return foundKeys;
 
 		} catch (IOException exception) {
@@ -55,9 +55,6 @@ public class SifterService {
 	}
 
 	private void useContainsMethodWithString(MultipartFile file, String key) throws FileNotFoundException {
-		System.out.println();
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println("useContainsMethodWithString");
 		try {
 
 			Path f = this.fileStorageLocation.resolve(StringUtils.cleanPath(file.getOriginalFilename()));
@@ -84,10 +81,6 @@ public class SifterService {
 				lines++;
 
 			}
-
-			System.out.println("Total lines: " + lines + "\n");
-			System.out.println("Keyword found on a total of " + foundOnLine + " lines\n");
-			System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		} catch (FileNotFoundException exception) {
 			exception.printStackTrace();
 		}
@@ -146,39 +139,73 @@ public class SifterService {
 //
 //	}
 
-	public void testReader(MultipartFile file) throws IOException {
+	public void siftLog(MultipartFile file, String key) throws IOException {
 		
 		Path f = this.fileStorageLocation.resolve(StringUtils.cleanPath(file.getOriginalFilename()));
 		File logfile = new File(f.toString());
 		LineIterator lineIterator = FileUtils.lineIterator(logfile, "UTF-8");
+		String[] keyArray = this.convertArray(key);
+		
+		String keyLetter = keyArray[0];
+				
 		
 		try {
 			while (lineIterator.hasNext()) {
-				List<String> lineArrList = testReaderHelper1(lineIterator);
+				List<String> lineArrList = lineToList(lineIterator);
+				
 				for (int a = 0; a < lineArrList.size() - 1; a++) {
-//					System.out.println(lineArrList.get(a));
-					System.out.println(lineArrList.toString());
+					/* TODO
+					 * ~~Iterating over each character of the current line
+					 * in the text file, at the current iteration
+					 * the character matches the first character of the given 
+					 * keyword, then go n index ahead (where n = to the difference 
+					 * of the last index of the keyword with the first) and see if 
+					 * the character found at that index matches the last 
+					 * character of the keyword.
+					 * If they do, iterate over this subsection to ensure they are the 
+					 * same keyword
+					 * if they are, do something!
+					 * If they are not the same sequence of characters, move on to the following iteration. 
+					 */
+					
+					if(lineArrList.get(a).equals(keyLetter)) {
+						int el = a + (keyArray.length - 1);
+						if(lineArrList.get(el).equals(keyArray[keyArray.length - 1])){
+							//iterate over the strings in between the 
+							// two matching strings at either end of the 
+							// given key to make sure that it is indeed the right word. 
+							
+						}
+						
+					}
 				}
 
 			}
-			System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		} finally {
 			lineIterator.close();
 		}
 
 	}
 	
-	private List<String> testReaderHelper1(LineIterator lineIterator) {
-		String line = lineIterator.nextLine().trim();
-		char[] lineCharArr = line.toCharArray();
-		List<String> lineArrList = new ArrayList<String>(lineCharArr.length);
-		System.out.println(line);
-		for(int i = 0; i < lineCharArr.length - 1; i++) {
-			lineArrList.add(i, Character.toString(lineCharArr[i]));
-		}
+	private List<String> lineToList(LineIterator lineIterator) {
+
+		char[] line = lineIterator.nextLine().trim().toCharArray();
+		
+		List<String> lineArrList = new ArrayList<String>();
+		
+		for(int i = 0; i < line.length - 1; i++) {lineArrList.add(i, Character.toString(line[i]));}
 		
 		return lineArrList;
 
+	}
+	
+	private String[] convertArray(String key) {
+		char[] keyCharArray = key.trim().toCharArray();
+		String[] keyStringArray = new String[keyCharArray.length];
+		
+		for(int i = 0; i < keyCharArray.length -1; i++) {keyStringArray[i] = Character.toString(keyCharArray[i]);}
+		
+		return keyStringArray;
 	}
 
 }
