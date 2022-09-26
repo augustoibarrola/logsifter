@@ -59,7 +59,7 @@ public class LogFileService {
 
 	public String storeLogFile(MultipartFile file, String key) throws FileNotFoundException {
 
-		HashMap<Integer, String> foundKeys = findKeyInFile(file, key);
+		HashMap<Integer, String> foundKeys = this.sifterService.findKeyInFile(file, key);
 
 		// Normalize file name
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -95,20 +95,6 @@ public class LogFileService {
 //            throw new MyFileNotFoundException("File not found " + fileName, ex);
 			return null;
 		}
-	}
-
-	private HashMap<Integer, String> findKeyInFile(MultipartFile file, String key) throws FileNotFoundException {
-		HashMap<Integer, String> foundKeys = new HashMap<Integer, String>();
-
-		try {
-			sifterService.useContainsMethod(file, key);
-			return foundKeys;
-
-		} catch (FileNotFoundException exception) {
-			exception.printStackTrace();
-		}
-
-		return foundKeys;
 	}
 
 }

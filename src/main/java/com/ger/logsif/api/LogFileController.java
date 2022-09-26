@@ -23,20 +23,9 @@ public class LogFileController {
 	@Autowired
 	LogFileService storageService;
 	
-//	@PostMapping("/uploadFile")
-//    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile logfile) {
-//        String fileName = storageService.storeLogFile(logfile);
-//
-//        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/downloadFile/")
-//                .path(fileName)
-//                .toUriString();
-//
-//        return new UploadFileResponse(fileName, fileDownloadUri,
-//        		logfile.getContentType(), logfile.getSize());
-//    }
-//	
-//	Compile-time Polymorphism
+	/*
+	 * Compile-time Polymorphism
+	 */
 	@PostMapping(value = "/uploadFile/{searchKey}")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile logfile, @PathVariable("searchKey")String key) throws FileNotFoundException {
         String fileName = storageService.storeLogFile(logfile, key);
@@ -51,6 +40,3 @@ public class LogFileController {
     }
 
 }
-
-
-//TODO find out how to create REST API that accepts java files

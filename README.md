@@ -15,3 +15,8 @@ provided by the File class are not suffecient in cases where large log files nee
 sifted through.
 
 - Am using [mingrammer/flog](https://github.com/mingrammer/flog) to make fake log outputs for example parses. 
+
+## TO-DO
+
+- [ ] Add hot reload for tomcat  
+_Everytime I change code, I need to go into the terminal, stop the servlet if it is running, and thenr rerun `mvn spring-boot:run` for the changes to take effect. <mark>I want to be able to save the changed source code and the application immediately refreshes.</mark>_
