@@ -25,17 +25,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class LogFileService {
 
-	private final Path fileStorageLocation;
+	private final SifterService sifterService;
 
-	@Autowired
+//	private final Path fileStorageLocation;
+
 	public LogFileService(LogFileProperties logfileProperties) {
-		this.fileStorageLocation = Paths.get(logfileProperties.getUploadRepo()).toAbsolutePath().normalize();
 
-		try {
-			Files.createDirectories(this.fileStorageLocation);
-		} catch (Exception ex) {
-//            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
-		}
+		this.sifterService = new SifterService(logfileProperties);
+
 	}
 
 	public String storeLogFile(MultipartFile file) {
@@ -50,7 +47,7 @@ public class LogFileService {
 			}
 
 			// Copy file to the target location (Replacing existing file with the same name)
-			Path targetLocation = this.fileStorageLocation.resolve(fileName);
+			Path targetLocation = this.sifterService.fileStorageLocation.resolve(fileName);
 			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
 			return fileName;
@@ -62,7 +59,7 @@ public class LogFileService {
 
 	public String storeLogFile(MultipartFile file, String key) throws FileNotFoundException {
 
-		HashMap<Integer, String> foundKeys = findKeyInFile(file, key);
+		HashMap<Integer, String> foundKeys = this.sifterService.findKeyInFile(file, key);
 
 		// Normalize file name
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -73,7 +70,7 @@ public class LogFileService {
 			}
 
 			// Copy file to the target location (Replacing existing file with the same name)
-			Path targetLocation = this.fileStorageLocation.resolve(fileName);
+			Path targetLocation = this.sifterService.fileStorageLocation.resolve(fileName);
 			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
 			return fileName;
@@ -85,7 +82,7 @@ public class LogFileService {
 
 	public Resource loadFileAsResource(String fileName) {
 		try {
-			Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+			Path filePath = this.sifterService.fileStorageLocation.resolve(fileName).normalize();
 			Resource resource = new UrlResource(filePath.toUri());
 			if (resource.exists()) {
 				return resource;
@@ -100,53 +97,6 @@ public class LogFileService {
 		}
 	}
 
-	private HashMap<Integer, String> findKeyInFile(MultipartFile file, String key) throws FileNotFoundException {
-		HashMap<Integer, String> foundKeys = new HashMap<Integer, String>();
-		
-		try {
-			Path f = this.fileStorageLocation.resolve(StringUtils.cleanPath(file.getOriginalFilename()));
-			File logfile = new File(f.toString());
 
-
-			FileInputStream inputStream = new FileInputStream(logfile);
-			Scanner logfileScanner = new Scanner(inputStream, "UTF-8");
-			
-
-			Instant lineCountStart = Instant.now();
-			int lines = 1;
-			int foundOnLine = 0;
-			
-			System.out.println("\nReading from file located at " + f + "...\n");
-			System.out.println("Searching for '" + key + "' keyword at " + f + "...\n");
-			
-			while(logfileScanner.hasNextLine()) {
-				
-				String line = logfileScanner.nextLine();
-
-				if(line.contains(key)) {
-
-					
-					System.out.print(lines +  " | " + line + "\n");
-
-					foundOnLine++;
-					lines++;
-				}
-				
-				
-				
-			}
-			
-			System.out.println("Total lines: " + lines + "\n");
-			System.out.println("Keyword found on a total of " + foundOnLine+ " lines\n");
-			
-			
-			return foundKeys;
-
-		} catch (FileNotFoundException exception) {
-			exception.printStackTrace();
-		}
-
-		return foundKeys;
-	}
 
 }
