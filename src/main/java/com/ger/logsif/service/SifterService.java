@@ -153,7 +153,7 @@ public class SifterService {
 			while (lineIterator.hasNext()) {
 				List<String> lineArrList = lineToList(lineIterator);
 				
-				for (int a = 0; a < lineArrList.size() - 1; a++) {
+				for (int a = 0; a < lineArrList.size() -1 ;a++) {
 					/* TODO
 					 * ~~Iterating over each character of the current line
 					 * in the text file, at the current iteration
@@ -168,16 +168,34 @@ public class SifterService {
 					 * If they are not the same sequence of characters, move on to the following iteration. 
 					 */
 					
-					if(lineArrList.get(a).equals(keyLetter)) {
-						int el = a + (keyArray.length - 1);
-						if(lineArrList.get(el).equals(keyArray[keyArray.length - 1])){
-							//iterate over the strings in between the 
-							// two matching strings at either end of the 
-							// given key to make sure that it is indeed the right word. 
-							
+					if(lineArrList.get(a).equals(keyLetter)) 
+					{
+						if((a + keyArray.length-1) <= lineArrList.size()-1)
+						{
+//							System.out.println("keyArray.length - 1 " + (keyArray.length - 1));
+//							System.out.println("lineArrList.size()-1" + (lineArrList.size()-1));
+//							System.out.println(lineArrList.get(a) + " " +  lineArrList.get((a + keyArray.length)));
+//							System.out.println("[a + (a+keyArray.length)] " + a + " " +  (a + keyArray.length-1));
+							if(lineArrList.get((a + keyArray.length)).equals(keyArray[keyArray.length-1])) {
+								List<String> arr = new ArrayList<String>();
+								System.out.println(lineArrList.get(a) + " " +  lineArrList.get((a + keyArray.length)));
+//								System.out.println("[a + (a+keyArray.length)] " + a + " " +  (a + keyArray.length-1));
+//								lineArrList.subList(a, (a+keyArray.length));
+								System.out.println(lineArrList.subList(a, (a+keyArray.length)).toString());
+							}
 						}
-						
 					}
+//						int el = a + keyArray.length - 1;
+//						System.out.println(lineArrList.get(a) + lineArrList.get(el));
+//						System.out.println(lineArrList.get(a));
+//						if(lineArrList.get(el).equals(keyArray[keyArray.length-1])){
+							
+//							System.out.println(lineArrList.get(a));
+//							System.out.println(lineArrList.get(el));
+							
+//						}
+						
+//					}
 				}
 
 			}
@@ -193,8 +211,7 @@ public class SifterService {
 		
 		List<String> lineArrList = new ArrayList<String>();
 		
-		for(int i = 0; i < line.length - 1; i++) {lineArrList.add(i, Character.toString(line[i]));}
-		
+		for(int i = 0; i < line.length; i++) {lineArrList.add(Character.toString(line[i]));}
 		return lineArrList;
 
 	}
@@ -203,7 +220,7 @@ public class SifterService {
 		char[] keyCharArray = key.trim().toCharArray();
 		String[] keyStringArray = new String[keyCharArray.length];
 		
-		for(int i = 0; i < keyCharArray.length -1; i++) {keyStringArray[i] = Character.toString(keyCharArray[i]);}
+		for(int i = 0; i < keyCharArray.length; i++) {keyStringArray[i] = Character.toString(keyCharArray[i]);}
 		
 		return keyStringArray;
 	}
